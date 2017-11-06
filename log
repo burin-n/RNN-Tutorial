@@ -1,0 +1,116 @@
+2017-10-24 11:38:26,104 [INFO] root: Loading config from /home/burin/Workspace/RNN-Tutorial/configs/neural_network.ini
+2017-10-24 11:38:26,105 [INFO] tf_train_ctc.py: config header: nn
+2017-10-24 11:38:26,105 [DEBUG] tf_train_ctc.py: self.epochs = 10
+2017-10-24 11:38:26.105944: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use SSE4.1 instructions, but these are available on your machine and could speed up CPU computations.
+2017-10-24 11:38:26.105959: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use SSE4.2 instructions, but these are available on your machine and could speed up CPU computations.
+2017-10-24 11:38:26.105964: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use AVX instructions, but these are available on your machine and could speed up CPU computations.
+2017-10-24 11:38:26.105968: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use AVX2 instructions, but these are available on your machine and could speed up CPU computations.
+2017-10-24 11:38:26.105973: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use FMA instructions, but these are available on your machine and could speed up CPU computations.
+2017-10-24 11:38:26.219127: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:893] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2017-10-24 11:38:26.219537: I tensorflow/core/common_runtime/gpu/gpu_device.cc:955] Found device 0 with properties: 
+name: GeForce 940MX
+major: 5 minor: 0 memoryClockRate (GHz) 1.2415
+pciBusID 0000:01:00.0
+Total memory: 3.95GiB
+Free memory: 3.93GiB
+2017-10-24 11:38:26.219559: I tensorflow/core/common_runtime/gpu/gpu_device.cc:976] DMA: 0 
+2017-10-24 11:38:26.219565: I tensorflow/core/common_runtime/gpu/gpu_device.cc:986] 0:   Y 
+2017-10-24 11:38:26.219573: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1045] Creating TensorFlow device (/gpu:0) -> (device: 0, name: GeForce 940MX, pci bus id: 0000:01:00.0)
+2017-10-24 11:38:26,262 [INFO] root: Using this device for main computations: /gpu:0
+2017-10-24 11:38:26,264 [DEBUG] root: Training configuration: {'dir_pattern': '/home/burin/Documents/asr-rnn/train-clean-wav', 'limit': 5, 'sort': 'filesize_low_high', 'batch_size': 2, 'start_idx': 0}
+2017-10-24 11:38:26,264 [DEBUG] root: Dev configuration: {'dir_pattern': '/home/burin/Documents/asr-rnn/dev-clean-wav', 'limit': 2, 'sort': 'random', 'batch_size': 2, 'start_idx': 0}
+2017-10-24 11:38:26,264 [DEBUG] root: Test configuration: {'dir_pattern': '/home/burin/Documents/asr-rnn/test-clean-wav', 'limit': 2, 'sort': 'random', 'batch_size': 2, 'start_idx': 0}
+2017-10-24 11:38:26,331 [INFO] tf_train_ctc.py: Training model: develop_BiRNN_20171024-113826
+        Train examples: 5
+        Dev examples: 2
+        Test examples: 2
+        Epochs: 10
+        Training batch size: 2
+        Batches per epoch: 3
+2017-10-24 11:38:31.908524: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1045] Creating TensorFlow device (/gpu:0) -> (device: 0, name: GeForce 940MX, pci bus id: 0000:01:00.0)
+2017-10-24 11:38:34,185 [INFO] tf_train_ctc.py: 
+===========Run training epoch===========
+
+2017-10-24 11:38:36.423595: W tensorflow/core/framework/op_kernel.cc:1192] Invalid argument: Saw a non-null label (index >= num_classes - 1) following a null label, batch: 0 num_classes: 29 labels: 1
+['/home/burin/Documents/asr-rnn/train-clean-wav/Ta001_058.txt', '/home/burin/Documents/asr-rnn/train-clean-wav/Ta008_003.txt', '/home/burin/Documents/asr-rnn/train-clean-wav/Ta017_065.txt', '/home/burin/Documents/asr-rnn/train-clean-wav/Ta023_110.txt', '/home/burin/Documents/asr-rnn/train-clean-wav/Ta024_078.txt']
++++++++++++++++++++++++++++++++++++++++++++
+SparseTensor(indices=Tensor("targets/indices:0", shape=(?, ?), dtype=int64, device=/device:GPU:0), values=Tensor("targets/values:0", shape=(?,), dtype=int32, device=/device:GPU:0), dense_shape=Tensor("targets/shape:0", shape=(?,), dtype=int64, device=/device:GPU:0)) Tensor("Reshape_1:0", shape=(?, ?, 29), dtype=float32, device=/device:GPU:0) Tensor("seq_length:0", shape=(?,), dtype=int32, device=/device:GPU:0)
+['ก็', '', 'ไม่', '', 'ไป', '', 'ดู', '', 'หนัง']
+[ 1 71  0 68 33 72  0 68 27  0 20 57  0 43 25 49  7]
+['ก็', '', 'ควร', '', 'ทำ', '', 'ตาม', '', 'เขา']
+[ 1 71  0  4 39 35  0 23 51  0 21 50 33  0 64  2 50]
+Traceback (most recent call last):
+  File "/home/burin/anaconda3/envs/tf-rnn/lib/python3.6/site-packages/tensorflow/python/client/session.py", line 1327, in _do_call
+    return fn(*args)
+  File "/home/burin/anaconda3/envs/tf-rnn/lib/python3.6/site-packages/tensorflow/python/client/session.py", line 1306, in _run_fn
+    status, run_metadata)
+  File "/home/burin/anaconda3/envs/tf-rnn/lib/python3.6/contextlib.py", line 88, in __exit__
+    next(self.gen)
+  File "/home/burin/anaconda3/envs/tf-rnn/lib/python3.6/site-packages/tensorflow/python/framework/errors_impl.py", line 466, in raise_exception_on_not_ok_status
+    pywrap_tensorflow.TF_GetCode(status))
+tensorflow.python.framework.errors_impl.InvalidArgumentError: Saw a non-null label (index >= num_classes - 1) following a null label, batch: 0 num_classes: 29 labels: 1
+	 [[Node: loss/CTCLoss = CTCLoss[ctc_merge_repeated=true, ignore_longer_outputs_than_inputs=false, preprocess_collapse_repeated=false, _device="/job:localhost/replica:0/task:0/cpu:0"](Reshape_1/_83, _arg_targets/indices_0_2, _arg_targets/values_0_4, _arg_seq_length_0_1)]]
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "src/train_framework/tf_train_ctc.py", line 563, in <module>
+    main()
+  File "/home/burin/anaconda3/envs/tf-rnn/lib/python3.6/site-packages/click/core.py", line 722, in __call__
+    return self.main(*args, **kwargs)
+  File "/home/burin/anaconda3/envs/tf-rnn/lib/python3.6/site-packages/click/core.py", line 697, in main
+    rv = self.invoke(ctx)
+  File "/home/burin/anaconda3/envs/tf-rnn/lib/python3.6/site-packages/click/core.py", line 895, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "/home/burin/anaconda3/envs/tf-rnn/lib/python3.6/site-packages/click/core.py", line 535, in invoke
+    return callback(*args, **kwargs)
+  File "src/train_framework/tf_train_ctc.py", line 561, in main
+    tf_train_ctc.run_model()
+  File "src/train_framework/tf_train_ctc.py", line 252, in run_model
+    self.run_training_epochs()
+  File "src/train_framework/tf_train_ctc.py", line 371, in run_training_epochs
+    epoch=epoch)
+  File "src/train_framework/tf_train_ctc.py", line 490, in run_batches
+    [self.avg_loss, self.optimizer], feed)
+  File "/home/burin/anaconda3/envs/tf-rnn/lib/python3.6/site-packages/tensorflow/python/client/session.py", line 895, in run
+    run_metadata_ptr)
+  File "/home/burin/anaconda3/envs/tf-rnn/lib/python3.6/site-packages/tensorflow/python/client/session.py", line 1124, in _run
+    feed_dict_tensor, options, run_metadata)
+  File "/home/burin/anaconda3/envs/tf-rnn/lib/python3.6/site-packages/tensorflow/python/client/session.py", line 1321, in _do_run
+    options, run_metadata)
+  File "/home/burin/anaconda3/envs/tf-rnn/lib/python3.6/site-packages/tensorflow/python/client/session.py", line 1340, in _do_call
+    raise type(e)(node_def, op, message)
+tensorflow.python.framework.errors_impl.InvalidArgumentError: Saw a non-null label (index >= num_classes - 1) following a null label, batch: 0 num_classes: 29 labels: 1
+	 [[Node: loss/CTCLoss = CTCLoss[ctc_merge_repeated=true, ignore_longer_outputs_than_inputs=false, preprocess_collapse_repeated=false, _device="/job:localhost/replica:0/task:0/cpu:0"](Reshape_1/_83, _arg_targets/indices_0_2, _arg_targets/values_0_4, _arg_seq_length_0_1)]]
+
+Caused by op 'loss/CTCLoss', defined at:
+  File "src/train_framework/tf_train_ctc.py", line 563, in <module>
+    main()
+  File "/home/burin/anaconda3/envs/tf-rnn/lib/python3.6/site-packages/click/core.py", line 722, in __call__
+    return self.main(*args, **kwargs)
+  File "/home/burin/anaconda3/envs/tf-rnn/lib/python3.6/site-packages/click/core.py", line 697, in main
+    rv = self.invoke(ctx)
+  File "/home/burin/anaconda3/envs/tf-rnn/lib/python3.6/site-packages/click/core.py", line 895, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "/home/burin/anaconda3/envs/tf-rnn/lib/python3.6/site-packages/click/core.py", line 535, in invoke
+    return callback(*args, **kwargs)
+  File "src/train_framework/tf_train_ctc.py", line 561, in main
+    tf_train_ctc.run_model()
+  File "src/train_framework/tf_train_ctc.py", line 214, in run_model
+    self.setup_loss_function()
+  File "src/train_framework/tf_train_ctc.py", line 312, in setup_loss_function
+    self.targets, self.logits, self.seq_length)
+  File "/home/burin/anaconda3/envs/tf-rnn/lib/python3.6/site-packages/tensorflow/python/ops/ctc_ops.py", line 152, in ctc_loss
+    ignore_longer_outputs_than_inputs=ignore_longer_outputs_than_inputs)
+  File "/home/burin/anaconda3/envs/tf-rnn/lib/python3.6/site-packages/tensorflow/python/ops/gen_ctc_ops.py", line 168, in _ctc_loss
+    name=name)
+  File "/home/burin/anaconda3/envs/tf-rnn/lib/python3.6/site-packages/tensorflow/python/framework/op_def_library.py", line 767, in apply_op
+    op_def=op_def)
+  File "/home/burin/anaconda3/envs/tf-rnn/lib/python3.6/site-packages/tensorflow/python/framework/ops.py", line 2630, in create_op
+    original_op=self._default_original_op, op_def=op_def)
+  File "/home/burin/anaconda3/envs/tf-rnn/lib/python3.6/site-packages/tensorflow/python/framework/ops.py", line 1204, in __init__
+    self._traceback = self._graph._extract_stack()  # pylint: disable=protected-access
+
+InvalidArgumentError (see above for traceback): Saw a non-null label (index >= num_classes - 1) following a null label, batch: 0 num_classes: 29 labels: 1
+	 [[Node: loss/CTCLoss = CTCLoss[ctc_merge_repeated=true, ignore_longer_outputs_than_inputs=false, preprocess_collapse_repeated=false, _device="/job:localhost/replica:0/task:0/cpu:0"](Reshape_1/_83, _arg_targets/indices_0_2, _arg_targets/values_0_4, _arg_seq_length_0_1)]]
+

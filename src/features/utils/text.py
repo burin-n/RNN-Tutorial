@@ -8,7 +8,7 @@ import tensorflow as tf
 # Constants
 SPACE_TOKEN = '<space>'
 SPACE_INDEX = 0
-FIRST_INDEX = ord('a') - 1  # 0 is reserved to space
+FIRST_INDEX = ord('ก') - 1  # 0 is reserved to space
 
 
 def normalize_txt_file(txt_file, remove_apostrophe=True):
@@ -27,13 +27,14 @@ def normalize_text(original, remove_apostrophe=True):
     """
     # convert any unicode characters to ASCII equivalent
     # then ignore anything else and decode to a string
-    result = unicodedata.normalize("NFKD", original).encode("ascii", "ignore").decode()
-    if remove_apostrophe:
-        # remove apostrophes to keep contractions together
-        result = result.replace("'", "")
+    # result = unicodedata.normalize("NFKD", original).encode("ascii", "ignore").decode()
+    # if remove_apostrophe:
+    #     # remove apostrophes to keep contractions together
+    #     result = result.replace("'", "")
     # return lowercase alphabetic characters and apostrophes (if still present)
-    return re.sub("[^a-zA-Z']+", ' ', result).strip().lower()
-
+    #return re.sub("[^a-zA-Z']+", ' ', result).strip().lower()
+    return re.sub("[^ก-์]+", ' ', original).strip()
+    #return original.strip()
 
 def text_to_char_array(original):
     """
@@ -51,12 +52,14 @@ def text_to_char_array(original):
     # Create list of sentence's words w/spaces replaced by ''
     result = original.replace(' ', '  ')
     result = result.split(' ')
-
+    print("input transript",result)
     # Tokenize words into letters adding in SPACE_TOKEN where required
     result = np.hstack([SPACE_TOKEN if xt == '' else list(xt) for xt in result])
 
     # Return characters mapped into indicies
-    return np.asarray([SPACE_INDEX if xt == SPACE_TOKEN else ord(xt) - FIRST_INDEX for xt in result])
+    temp = np.asarray([SPACE_INDEX if xt == SPACE_TOKEN else ord(xt) - FIRST_INDEX for xt in result])
+    print("to char array:",temp)
+    return temp
 
 
 def sparse_tuple_from(sequences, dtype=np.int32):
@@ -138,8 +141,12 @@ def ndarray_to_text(value):
     '''
     results = ''
     for i in range(len(value)):
+        print( value[i] , end= ' ')
         results += chr(value[i] + FIRST_INDEX)
-    return results.replace('`', ' ')
+    print("end array to text -- ")
+    # character before FIRST INDEX represent space
+    return results.replace(chr(FIRST_INDEX), ' ')
+    # return results.replace('`', ' ')
 
 
 def gather_nd(params, indices, shape):

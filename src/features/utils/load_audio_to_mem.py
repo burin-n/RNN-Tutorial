@@ -110,7 +110,7 @@ def audiofile_to_input_vector(audio_filename, numcep, numcontext):
         assert(len(empty_source_future) + len(data_source_future) == numcontext)
 
         if need_empty_past:
-            past = np.concatenate((empty_source_past, data_source_past))
+           past = np.concatenate((empty_source_past, data_source_past))
         else:
             past = data_source_past
 

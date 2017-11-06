@@ -54,9 +54,11 @@ def read_datasets(conf_path, sets, numcep, numcontext,
                                       limit=config['limit'],
                                       sort=config['sort']
                                       )
+    
     datasets = {name: _read_data_set(dataset_config[name])
                       if name in sets else None
                 for name in ('train', 'dev', 'test')}
+    
     return DataSets(**datasets)
 
 

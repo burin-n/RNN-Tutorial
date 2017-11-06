@@ -200,6 +200,7 @@ class Tf_train_ctc(object):
             self.epochs,
             self.batch_size,
             self.n_batches_per_epoch))
+        print(self.data_sets.train._txt_files)
 
     def run_model(self):
         self.graph = tf.Graph()
@@ -280,18 +281,22 @@ class Tf_train_ctc(object):
         # 1d array of size [batch_size]
         self.seq_length = tf.placeholder(tf.int32, [None], name='seq_length')
 
+
     def load_placeholder_into_network(self):
         # logits is the non-normalized output/activations from the last layer.
         # logits will be input for the loss function.
         # nn_model is from the import statement in the load_model function
         # summary_op variables are for tensorboard
         if self.network_type == 'SimpleLSTM':
+            logger.debug("SimpleLSTM****************")
             self.logits, summary_op = SimpleLSTM_model(
                 self.conf_path,
                 self.input_tensor,
                 tf.to_int64(self.seq_length)
             )
         elif self.network_type == 'BiRNN':
+            logger.debug("BiRNN****************")
+
             self.logits, summary_op = BiRNN_model(
                 self.conf_path,
                 self.input_tensor,
@@ -303,7 +308,14 @@ class Tf_train_ctc(object):
             raise ValueError('network_type must be SimpleLSTM or BiRNN')
         self.summary_op = tf.summary.merge([summary_op])
 
+
     def setup_loss_function(self):
+        print("+++++++++++++++++++++++++++++++++++++++++++")
+        print(self.targets)
+        print("+++++++++++++++++++++++++++++++++++++++++++")
+        print(self.logits)
+        print("+++++++++++++++++++++++++++++++++++++++++++")
+        print(self.seq_length)
         with tf.name_scope("loss"):
             self.total_loss = ctc_ops.ctc_loss(
                 self.targets, self.logits, self.seq_length)
@@ -474,7 +486,13 @@ class Tf_train_ctc(object):
         for batch in range(n_batches_per_epoch):
             # Get next batch of training data (audio features) and transcripts
             source, source_lengths, sparse_labels = dataset.next_batch()
-
+            print("IN BATCH")
+            print("SOURCE", source)
+            print("###########################################")
+            print("SOURCE_LENGTHS", source_lengths)
+            print("###########################################")
+            print("SPARSE_LABELS", sparse_labels)
+            print("###########################################")
             feed = {self.input_tensor: source,
                     self.targets: sparse_labels,
                     self.seq_length: source_lengths}
@@ -491,7 +509,7 @@ class Tf_train_ctc(object):
 
             self.train_ler += self.sess.run(self.ler, feed_dict=feed) * dataset._batch_size
             logger.debug('Label error rate: %.2f', self.train_ler)
-
+            
             # Turn on decode only 1 batch per epoch
             if decode and batch == 0:
                 d = self.sess.run(self.decoded[0], feed_dict={
@@ -499,6 +517,8 @@ class Tf_train_ctc(object):
                     self.targets: sparse_labels,
                     self.seq_length: source_lengths}
                 )
+                print("D------------------------------------------------")
+                print(d)
                 dense_decoded = tf.sparse_tensor_to_dense(
                     d, default_value=-1).eval(session=self.sess)
                 dense_labels = sparse_tuple_to_texts(sparse_labels)
@@ -546,6 +566,7 @@ if __name__ == '__main__':
     def main(config='neural_network.ini', name=None, debug=False):
         logging.basicConfig(level=logging.DEBUG,
                             format='%(asctime)s [%(levelname)s] %(name)s: %(message)s')
+
         global logger
         logger = logging.getLogger(os.path.basename(__file__))
 
