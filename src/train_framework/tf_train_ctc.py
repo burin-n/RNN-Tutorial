@@ -506,12 +506,10 @@ class Tf_train_ctc(object):
                     [self.avg_loss, self.optimizer], feed)
                 self.train_cost += batch_cost * dataset._batch_size
                 
-                print("#############",end=' ')
-                print("epoch: {}/{} batch: {}/{} - {:1.2f}%".format(
-                    epoch,self.epochs-1,batch,n_batches_per_epoch-1,
+                logger.info("#### epoch: {}/{} batch: {}/{} - {:1.2f}% ####"
+                    .format(epoch,self.epochs-1,batch,n_batches_per_epoch-1,
                     (n_batches_per_epoch*epoch + batch +1) /
-                    (n_batches_per_epoch*self.epochs)*100), end=' ')
-                print("#############")
+                    (n_batches_per_epoch*self.epochs)*100))
                 
                 logger.debug('Batch cost: %.2f | Train cost: %.2f',
                              batch_cost, self.train_cost)
@@ -527,8 +525,7 @@ class Tf_train_ctc(object):
                     self.targets: sparse_labels,
                     self.seq_length: source_lengths}
                 )
-                # print("d------------------------------------------------")
-                # print(d)
+
                 dense_decoded = tf.sparse_tensor_to_dense(
                     d, default_value=-1).eval(session=self.sess)
                 dense_labels = sparse_tuple_to_texts(sparse_labels)

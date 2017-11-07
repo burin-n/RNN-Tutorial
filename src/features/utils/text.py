@@ -5,6 +5,11 @@ import re
 
 import tensorflow as tf
 
+### own
+import os
+import logging
+global logger
+logger = logging.getLogger(os.path.basename(__file__))
 # Constants
 SPACE_TOKEN = '<space>'
 SPACE_INDEX = 0
@@ -52,13 +57,13 @@ def text_to_char_array(original):
     # Create list of sentence's words w/spaces replaced by ''
     result = original.replace(' ', '  ')
     result = result.split(' ')
-    print("input transript",result)
+    logger.debug("input transript: {}".format(result))
     # Tokenize words into letters adding in SPACE_TOKEN where required
     result = np.hstack([SPACE_TOKEN if xt == '' else list(xt) for xt in result])
 
     # Return characters mapped into indicies
     temp = np.asarray([SPACE_INDEX if xt == SPACE_TOKEN else ord(xt) - FIRST_INDEX for xt in result])
-    print("to char array:",temp)
+    logger.debug("to char array: {}".format(temp))
     return temp
 
 
@@ -140,10 +145,11 @@ def ndarray_to_text(value):
     # file, You can obtain one at http://mozilla.org/MPL/2.0/.
     '''
     results = ''
+    temp_p = ''
     for i in range(len(value)):
-        print( value[i] , end= ' ')
+        temp_p += str(value[i]) + ' ' 
         results += chr(value[i] + FIRST_INDEX)
-    print("end array to text -- ")
+    logger.debug("{} | end array to text -- ".format(temp_p))
     # character before FIRST INDEX represent long voice
     # FIRST INDEX represent space
     return results.replace(chr(FIRST_INDEX), ' ').replace(chr(FIRST_INDEX-1),'_')
