@@ -27,12 +27,12 @@ def normalize_text(original, remove_apostrophe=True):
     """
     # convert any unicode characters to ASCII equivalent
     # then ignore anything else and decode to a string
-    # result = unicodedata.normalize("NFKD", original).encode("ascii", "ignore").decode()
-    # if remove_apostrophe:
-    #     # remove apostrophes to keep contractions together
-    #     result = result.replace("'", "")
+    result = unicodedata.normalize("NFKD", original).encode("ascii", "ignore").decode()
+    if remove_apostrophe:
+        # remove apostrophes to keep contractions together
+        result = result.replace("'", "")
     # return lowercase alphabetic characters and apostrophes (if still present)
-    #return re.sub("[^a-zA-Z']+", ' ', result).strip().lower()
+    # return re.sub("[^a-zA-Z']+", ' ', result).strip().lower()
     return re.sub("[^ก-์]+", ' ', original).strip()
     #return original.strip()
 
@@ -144,8 +144,9 @@ def ndarray_to_text(value):
         print( value[i] , end= ' ')
         results += chr(value[i] + FIRST_INDEX)
     print("end array to text -- ")
-    # character before FIRST INDEX represent space
-    return results.replace(chr(FIRST_INDEX), ' ')
+    # character before FIRST INDEX represent long voice
+    # FIRST INDEX represent space
+    return results.replace(chr(FIRST_INDEX), ' ').replace(chr(FIRST_INDEX-1),'_')
     # return results.replace('`', ' ')
 
 

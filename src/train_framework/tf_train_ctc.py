@@ -200,7 +200,7 @@ class Tf_train_ctc(object):
             self.epochs,
             self.batch_size,
             self.n_batches_per_epoch))
-        print(self.data_sets.train._txt_files)
+        print("train-.txt files",self.data_sets.train._txt_files)
 
     def run_model(self):
         self.graph = tf.Graph()
@@ -486,13 +486,13 @@ class Tf_train_ctc(object):
         for batch in range(n_batches_per_epoch):
             # Get next batch of training data (audio features) and transcripts
             source, source_lengths, sparse_labels = dataset.next_batch()
-            print("IN BATCH")
-            print("SOURCE", source)
-            print("###########################################")
-            print("SOURCE_LENGTHS", source_lengths)
-            print("###########################################")
-            print("SPARSE_LABELS", sparse_labels)
-            print("###########################################")
+            # print("IN BATCH")
+            # print("SOURCE", source)
+            # print("###########################################")
+            # print("SOURCE_LENGTHS", source_lengths)
+            # print("###########################################")
+            # print("SPARSE_LABELS", sparse_labels)
+            # print("###########################################")
             feed = {self.input_tensor: source,
                     self.targets: sparse_labels,
                     self.seq_length: source_lengths}
@@ -517,8 +517,8 @@ class Tf_train_ctc(object):
                     self.targets: sparse_labels,
                     self.seq_length: source_lengths}
                 )
-                print("D------------------------------------------------")
-                print(d)
+                # print("d------------------------------------------------")
+                # print(d)
                 dense_decoded = tf.sparse_tensor_to_dense(
                     d, default_value=-1).eval(session=self.sess)
                 dense_labels = sparse_tuple_to_texts(sparse_labels)
