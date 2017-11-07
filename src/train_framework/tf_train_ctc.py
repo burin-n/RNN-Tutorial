@@ -484,6 +484,7 @@ class Tf_train_ctc(object):
         self.train_ler = 0
 
         for batch in range(n_batches_per_epoch):
+
             # Get next batch of training data (audio features) and transcripts
             source, source_lengths, sparse_labels = dataset.next_batch()
             # print("IN BATCH")
@@ -504,8 +505,17 @@ class Tf_train_ctc(object):
                 batch_cost, _ = self.sess.run(
                     [self.avg_loss, self.optimizer], feed)
                 self.train_cost += batch_cost * dataset._batch_size
+                
+                print("#############",end=' ')
+                print("epoch: {}/{} batch: {}/{} - {:1.2f}%".format(
+                    epoch,self.epochs-1,batch,n_batches_per_epoch-1,
+                    (n_batches_per_epoch*epoch + batch +1) /
+                    (n_batches_per_epoch*self.epochs)*100), end=' ')
+                print("#############")
+                
                 logger.debug('Batch cost: %.2f | Train cost: %.2f',
                              batch_cost, self.train_cost)
+
 
             self.train_ler += self.sess.run(self.ler, feed_dict=feed) * dataset._batch_size
             logger.debug('Label error rate: %.2f', self.train_ler)
