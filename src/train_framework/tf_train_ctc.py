@@ -200,7 +200,7 @@ class Tf_train_ctc(object):
             self.epochs,
             self.batch_size,
             self.n_batches_per_epoch))
-        print("train-.txt files",self.data_sets.train._txt_files)
+        # print("train-.txt files",self.data_sets.train._txt_files)
 
     def run_model(self):
         self.graph = tf.Graph()
@@ -310,12 +310,12 @@ class Tf_train_ctc(object):
 
 
     def setup_loss_function(self):
-        print("+++++++++++++++++++++++++++++++++++++++++++")
-        print(self.targets)
-        print("+++++++++++++++++++++++++++++++++++++++++++")
-        print(self.logits)
-        print("+++++++++++++++++++++++++++++++++++++++++++")
-        print(self.seq_length)
+        # print("+++++++++++++++++++++++++++++++++++++++++++")
+        # print(self.targets)
+        # print("+++++++++++++++++++++++++++++++++++++++++++")
+        # print(self.logits)
+        # print("+++++++++++++++++++++++++++++++++++++++++++")
+        # print(self.seq_length)
         with tf.name_scope("loss"):
             self.total_loss = ctc_ops.ctc_loss(
                 self.targets, self.logits, self.seq_length)
