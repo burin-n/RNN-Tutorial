@@ -318,7 +318,8 @@ class Tf_train_ctc(object):
         # print(self.seq_length)
         with tf.name_scope("loss"):
             self.total_loss = ctc_ops.ctc_loss(
-                self.targets, self.logits, self.seq_length)
+                self.targets, self.logits, self.seq_length,
+                    ignore_longer_outputs_than_inputs=True)
             self.avg_loss = tf.reduce_mean(self.total_loss)
             self.loss_summary = tf.summary.scalar("avg_loss", self.avg_loss)
 
