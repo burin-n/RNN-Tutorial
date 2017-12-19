@@ -71,7 +71,7 @@ class Tf_train_ctc(object):
         logging.info('Using this device for main computations: %s', self.tf_device)
 
         # set the directories
-        self.set_up_directories(model_name)
+        self.set_up_directories(self.model_name)
 
         # set up the model
         self.set_up_model()
@@ -104,12 +104,12 @@ class Tf_train_ctc(object):
         self.model_dir = parser.get(config_header, 'model_dir')
 
         # set the session name
-        self.session_name = '{}_{}'.format(
-            self.network_type, time.strftime("%Y%m%d-%H%M%S"))
-        sess_prefix_str = 'develop'
-        if len(sess_prefix_str) > 0:
-            self.session_name = '{}_{}'.format(
-                sess_prefix_str, self.session_name)
+        #self.session_name = '{}_{}'.format(
+        #    self.network_type, time.strftime("%Y%m%d-%H%M%S"))
+        #sess_prefix_str = 'develop'
+        #if len(sess_prefix_str) > 0:
+        #    self.session_name = '{}_{}'.format(
+        #        sess_prefix_str, self.session_name)
 
         # How often to save the model
         self.SAVE_MODEL_EPOCH_NUM = parser.getint(
@@ -146,6 +146,25 @@ class Tf_train_ctc(object):
         # set up the max amount of simultaneous users
         # this restricts GPU usage to the inverse of self.simultaneous_users_count
         self.simultaneous_users_count = parser.getint(config_header, 'simultaneous_users_count')
+        
+        # mycode load state from config file
+        config_header = 'state'
+        logger.info('config header: %s', config_header)
+
+        # set the model name
+        self.model_name = parser.get(config_header, 'model_name')
+       
+        # set the session name
+        session_name = parser.get(config_header, 'session_name')
+        if(session_name != None):
+            self.session_name = session_name
+
+        self.start_epoch = parser.get(config_header, 'start_epoch')
+        
+        # end mycode 
+
+
+
 
     def set_up_directories(self, model_name):
         # Set up model directory
@@ -362,7 +381,7 @@ class Tf_train_ctc(object):
             self.test_ler_op = tf.summary.scalar(
                 "test_label_error_rate", self.ler_placeholder)
 
-    def run_training_epochs(self):
+    def run_training_epochs(self, start_ep=0):
         train_start = time.time()
         for epoch in range(self.epochs):
             # Initialize variables that can be updated
@@ -571,7 +590,7 @@ if __name__ == '__main__':
     @click.option('--debug', type=bool, default=False,
                   help='Use debug settings in config file')
     # Train RNN model using a given configuration file
-    def main(config='neural_network.ini', name=None, debug=False):
+    def main(config='neural_network.ini', name="None", debug=False):
         logging.basicConfig(level=logging.DEBUG,
                             format='%(asctime)s [%(levelname)s] %(name)s: %(message)s')
 
