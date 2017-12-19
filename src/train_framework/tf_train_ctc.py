@@ -104,12 +104,12 @@ class Tf_train_ctc(object):
         self.model_dir = parser.get(config_header, 'model_dir')
 
         # set the session name
-        #self.session_name = '{}_{}'.format(
-        #    self.network_type, time.strftime("%Y%m%d-%H%M%S"))
-        #sess_prefix_str = 'develop'
-        #if len(sess_prefix_str) > 0:
-        #    self.session_name = '{}_{}'.format(
-        #        sess_prefix_str, self.session_name)
+        self.session_name = '{}_{}'.format(
+            self.network_type, time.strftime("%Y%m%d-%H%M%S"))
+        sess_prefix_str = 'develop'
+        if len(sess_prefix_str) > 0:
+            self.session_name = '{}_{}'.format(
+                sess_prefix_str, self.session_name)
 
         # How often to save the model
         self.SAVE_MODEL_EPOCH_NUM = parser.getint(
@@ -153,13 +153,20 @@ class Tf_train_ctc(object):
 
         # set the model name
         self.model_name = parser.get(config_header, 'model_name')
-       
+      
         # set the session name
         session_name = parser.get(config_header, 'session_name')
         if(session_name != None):
             self.session_name = session_name
 
-        self.start_epoch = parser.get(config_header, 'start_epoch')
+
+        if( self.model_name != None):
+            
+            self.start_epoch = int(self.model_name.split('-')[1]) + 1
+        else:
+            self.start_epoch = 0
+
+        self.is_train = parser.getboolean(config_header, 'is_train')
         
         # end mycode 
 
@@ -258,6 +265,13 @@ class Tf_train_ctc(object):
             # If there is a model_path declared, then restore the model
             if self.model_path is not None:
                 self.saver.restore(self.sess, self.model_path)
+                # mycode 
+                # MAIN LOGIC for running the training epochs
+                if(self.is_train):
+                    logger.info(section.format('Run training epoch'))
+                    self.run_training_epochs()
+                # end mycode
+
             # If there is NOT a model_path declared, build the model from scratch
             else:
                 # Op to initialize the variables
@@ -329,13 +343,7 @@ class Tf_train_ctc(object):
 
 
     def setup_loss_function(self):
-        # print("+++++++++++++++++++++++++++++++++++++++++++")
-        # print(self.targets)
-        # print("+++++++++++++++++++++++++++++++++++++++++++")
-        # print(self.logits)
-        # print("+++++++++++++++++++++++++++++++++++++++++++")
-        # print(self.seq_length)
-        with tf.name_scope("loss"):
+       with tf.name_scope("loss"):
             self.total_loss = ctc_ops.ctc_loss(
                 self.targets, self.logits, self.seq_length,
                     ignore_longer_outputs_than_inputs=True)
@@ -381,9 +389,9 @@ class Tf_train_ctc(object):
             self.test_ler_op = tf.summary.scalar(
                 "test_label_error_rate", self.ler_placeholder)
 
-    def run_training_epochs(self, start_ep=0):
+    def run_training_epochs(self):
         train_start = time.time()
-        for epoch in range(self.epochs):
+        for epoch in range(self.start_epoch,self.epochs):
             # Initialize variables that can be updated
             save_dev_model = False
             stop_training = False
@@ -599,7 +607,7 @@ if __name__ == '__main__':
 
         # create the Tf_train_ctc class
         tf_train_ctc = Tf_train_ctc(
-            config_file=config, model_name=name, debug=debug)
+           config_file=config, model_name=name, debug=debug)
 
         # run the training
         tf_train_ctc.run_model()
