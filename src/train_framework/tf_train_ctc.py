@@ -71,7 +71,8 @@ class Tf_train_ctc(object):
         logging.info('Using this device for main computations: %s', self.tf_device)
 
         # set the directories
-        self.set_up_directories(self.model_name)
+        self.set_up_directories()
+        self.set_model_name()
 
         # set up the model
         self.set_up_model()
@@ -151,29 +152,22 @@ class Tf_train_ctc(object):
         config_header = 'state'
         logger.info('config header: %s', config_header)
 
-        # set the model name
-        self.model_name = parser.get(config_header, 'model_name')
-      
         # set the session name
+        self.set_session = parser.getboolean(config_header, 'set_session')
         session_name = parser.get(config_header, 'session_name')
-        if(session_name != None):
+
+        if(self.set_session == True and session_name != "None"):
             self.session_name = session_name
-
-
-        if( self.model_name != None):
-            
-            self.start_epoch = int(self.model_name.split('-')[1]) + 1
         else:
-            self.start_epoch = 0
+            self.set_session = False
 
-        self.is_train = parser.getboolean(config_header, 'is_train')
-        
+        self.more_train = parser.getboolean(config_header, 'more_train')
+
         # end mycode 
 
 
 
-
-    def set_up_directories(self, model_name):
+    def set_up_directories(self):
         # Set up model directory
         self.model_dir = os.path.join(get_model_dir(), self.model_dir)
         # summary will contain logs
@@ -188,11 +182,47 @@ class Tf_train_ctc(object):
         if not os.path.exists(self.SUMMARY_DIR):
             os.makedirs(self.SUMMARY_DIR)
 
+
+    # mycode    
+    def set_model_name(self):
+        
+        config_header = 'state'
+        logger.info('config header: %s', config_header)
+        parser = ConfigParser(os.environ)
+        parser.read(self.conf_path)
+
+
+        # set the model name
+        self.model_name = parser.get(config_header, 'model_name')
+        if(self.model_name == "None"):
+            self.model_name = None
+        
+        if(self.model_name != None):
+            self.start_epoch = int(self.model_name.split('-')[1]) + 1
+        elif(self.set_session):
+            most_ep = 0
+            print(self.SESSION_DIR)
+            for file in os.listdir(self.SESSION_DIR):
+                if file.endswith(".index"):
+                    print(int(file.split('-')[1].split('.')[0]))
+                    most_ep = max(most_ep, int(file.split('-')[1].split('.')[0]))
+            
+            print("HI",most_ep)
+            if(most_ep > 0):
+                self.model_name = "model.ckpt-" + str(most_ep)
+                self.start_epoch = most_ep + 1
+                print("YO",most_ep)
+        else:
+            self.start_epoch = 0
+
+
         # set the model name and restore if not None
-        if model_name is not None:
-            self.model_path = os.path.join(self.SESSION_DIR, model_name)
+        if self.model_name is not None:
+            self.model_path = os.path.join(self.SESSION_DIR, self.model_name)
         else:
             self.model_path = None
+    # end mycode
+
 
     def set_up_model(self):
         self.sets = ['train', 'dev', 'test']
@@ -267,7 +297,7 @@ class Tf_train_ctc(object):
                 self.saver.restore(self.sess, self.model_path)
                 # mycode 
                 # MAIN LOGIC for running the training epochs
-                if(self.is_train):
+                if(self.more_train):
                     logger.info(section.format('Run training epoch'))
                     self.run_training_epochs()
                 # end mycode
