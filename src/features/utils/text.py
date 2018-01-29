@@ -63,7 +63,7 @@ def text_to_char_array(original):
 
     # Return characters mapped into indicies
     temp = np.asarray([SPACE_INDEX if xt == SPACE_TOKEN else ord(xt) - FIRST_INDEX for xt in result])
-    logger.debug("to char array: {}".format(temp))
+    #logger.debug("to char array: {}".format(temp))
     return temp
 
 
@@ -149,7 +149,7 @@ def ndarray_to_text(value):
     for i in range(len(value)):
         temp_p += str(value[i]) + ' ' 
         results += chr(value[i] + FIRST_INDEX)
-    logger.debug("{} | end array to text -- ".format(temp_p))
+    # logger.debug("{} | end array to text -- ".format(temp_p))
     # character before FIRST INDEX represent long voice
     # FIRST INDEX represent space
     return results.replace(chr(FIRST_INDEX), ' ').replace(chr(FIRST_INDEX-1),'_')
