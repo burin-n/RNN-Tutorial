@@ -11,9 +11,25 @@ import logging
 global logger
 logger = logging.getLogger(os.path.basename(__file__))
 # Constants
+remove_space = False
+
 SPACE_TOKEN = '<space>'
 SPACE_INDEX = 0
-FIRST_INDEX = ord('ก') - 1  # 0 is reserved to space
+# FIRST_INDEX = ord('a') - 1  # 0 is reserved to space
+FIRST_INDEX = 0
+
+char2idx = dict()
+idx2char = []
+
+if(remove_space):
+    char2idx[SPACE_TOKEN] = 0
+    idx2char.append(SPACE_TOKEN)
+
+with codecs.open('configs/th_chars.csv', encoding='utf-8') as f:
+  for line in f:
+    char = line.strip().split(',')[0]
+    char2idx[char] = len(idx2char)
+    idx2char.append(char)
 
 
 def normalize_txt_file(txt_file, remove_apostrophe=True):
@@ -32,14 +48,25 @@ def normalize_text(original, remove_apostrophe=True):
     """
     # convert any unicode characters to ASCII equivalent
     # then ignore anything else and decode to a string
-    result = unicodedata.normalize("NFKD", original).encode("ascii", "ignore").decode()
+    result = unicodedata.normalize("NFKD", original)
+    # result = pythainlp.util.normalize(result)
+    
     if remove_apostrophe:
         # remove apostrophes to keep contractions together
         result = result.replace("'", "")
     # return lowercase alphabetic characters and apostrophes (if still present)
     # return re.sub("[^a-zA-Z']+", ' ', result).strip().lower()
-    return re.sub("[^ก-์]+", ' ', original).strip()
-    #return original.strip()
+    # return re.sub("[^a-zก-์']+", ' ', result.strip().lower())
+    temp = result
+    result = ""
+    for ch in temp.strip().lower():
+      if(ch != " " and not ch in char2idx.keys()):
+        continue
+      result += ch
+    if(remove_space):
+        result = result.replace(" ", '')
+    return result
+    
 
 def text_to_char_array(original):
     """
@@ -57,14 +84,18 @@ def text_to_char_array(original):
     # Create list of sentence's words w/spaces replaced by ''
     result = original.replace(' ', '  ')
     result = result.split(' ')
-    logger.debug("input transript: {}".format(result))
+    # logger.debug("input transript: {}, {}".format(original, result))
     # Tokenize words into letters adding in SPACE_TOKEN where required
     result = np.hstack([SPACE_TOKEN if xt == '' else list(xt) for xt in result])
 
     # Return characters mapped into indicies
-    temp = np.asarray([SPACE_INDEX if xt == SPACE_TOKEN else ord(xt) - FIRST_INDEX for xt in result])
-    #logger.debug("to char array: {}".format(temp))
-    return temp
+    # temp = np.asarray([SPACE_INDEX if xt == SPACE_TOKEN else ord(xt) - FIRST_INDEX for xt in result])
+    # logger.debug("to char array: {}".format(temp))
+    # return temp
+    if(remove_space):
+        return np.asarray([char2idx[xt] for xt in result])
+    else:
+        return np.asarray([SPACE_INDEX if xt == SPACE_TOKEN else char2idx[xt] for xt in result])
 
 
 def sparse_tuple_from(sequences, dtype=np.int32):
@@ -129,7 +160,8 @@ def sparse_tuple_to_texts(tuple):
     for i in range(len(indices)):
         index = indices[i][0]
         c = values[i]
-        c = ' ' if c == SPACE_INDEX else chr(c + FIRST_INDEX)
+        # c = ' ' if c == SPACE_INDEX else chr(c + FIRST_INDEX)
+        c = ' ' if c == SPACE_INDEX else idx2char[c]
         results[index] = results[index] + c
     # List of strings
     return results
@@ -148,12 +180,19 @@ def ndarray_to_text(value):
     temp_p = ''
     for i in range(len(value)):
         temp_p += str(value[i]) + ' ' 
-        results += chr(value[i] + FIRST_INDEX)
+        # results += chr(value[i] + FIRST_INDEX)
+        if int(value[i]) == -1:
+            results += ''
+        elif value[i] == SPACE_INDEX:
+            results += SPACE_TOKEN
+        else:
+            results += idx2char[value[i]] 
+
     # logger.debug("{} | end array to text -- ".format(temp_p))
     # character before FIRST INDEX represent long voice
     # FIRST INDEX represent space
-    return results.replace(chr(FIRST_INDEX), ' ').replace(chr(FIRST_INDEX-1),'_')
-    # return results.replace('`', ' ')
+    # return results.replace(chr(FIRST_INDEX), ' ').replace(chr(FIRST_INDEX-1),'_')
+    return results.replace(SPACE_TOKEN, ' ')
 
 
 def gather_nd(params, indices, shape):

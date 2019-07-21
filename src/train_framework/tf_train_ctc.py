@@ -375,8 +375,8 @@ class Tf_train_ctc(object):
     def setup_loss_function(self):
        with tf.name_scope("loss"):
             self.total_loss = ctc_ops.ctc_loss(
-                self.targets, self.logits, self.seq_length,
-                    ignore_longer_outputs_than_inputs=True)
+                self.targets, self.logits, self.seq_length)
+                    # ignore_longer_outputs_than_inputs=True)
             self.avg_loss = tf.reduce_mean(self.total_loss)
             self.loss_summary = tf.summary.scalar("avg_loss", self.avg_loss)
 
@@ -395,10 +395,10 @@ class Tf_train_ctc(object):
         with tf.name_scope("decode"):
             if self.beam_search_decoder == 'default':
                 self.decoded, self.log_prob = ctc_ops.ctc_beam_search_decoder(
-                    self.logits, self.seq_length, merge_repeated=False)
+                    self.logits, self.seq_length, merge_repeated=True)
             elif self.beam_search_decoder == 'greedy':
                 self.decoded, self.log_prob = ctc_ops.ctc_greedy_decoder(
-                    self.logits, self.seq_length, merge_repeated=False)
+                    self.logits, self.seq_length, merge_repeated=True)
             else:
                 logging.warning("Invalid beam search decoder option selected!")
 
