@@ -70,7 +70,7 @@ tensorboard --logdir=$RNN_TUTORIAL/models/nn/debug_models/summary/
 
 
 ### Add data
-Some data examples are stored in data folder. There are Thai speech from [Lotus corpus](https://www.nectec.or.th/corpus/index.php?league=sa). The data is separated into folders:
+Some examples data are stored in `data` folder. There are Thai speech samples from [Lotus corpus](https://www.nectec.or.th/corpus/index.php?league=sa). The data is separated into folders:
 
     - Train: train (2 examples)
     - Test: test (2 examples)
