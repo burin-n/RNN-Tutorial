@@ -4,7 +4,7 @@
 Clone this repo to your local machine, and add the RNN-Tutorial directory as a system variable to your `~/.profile`. Instructions given for bash shell:
 
 ```bash
-git clone https://github.com/silicon-valley-data-science/RNN-Tutorial
+git clone https://github.com/burin-n/RNN-Tutorial
 cd RNN-Tutorial
 echo "export RNN_TUTORIAL=${PWD}" >> ~/.profile
 echo "export PYTHONPATH=${PWD}/src:${PYTHONPATH}" >> ~/.profile
