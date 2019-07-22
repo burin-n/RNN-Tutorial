@@ -4,7 +4,7 @@
 Clone this repo to your local machine, and add the RNN-Tutorial directory as a system variable to your `~/.profile`. Instructions given for bash shell:
 
 ```bash
-git clone https://github.com/silicon-valley-data-science/RNN-Tutorial
+git clone https://github.com/burin-n/RNN-Tutorial
 cd RNN-Tutorial
 echo "export RNN_TUTORIAL=${PWD}" >> ~/.profile
 echo "export PYTHONPATH=${PWD}/src:${PYTHONPATH}" >> ~/.profile
@@ -38,7 +38,7 @@ pip install --upgrade\
 <sub>**Error note** (if you did not get an error skip this paragraph): Depending on how you installed pip and/or conda, we've seen different outcomes. If you get an error the first time, rerunning it may incorrectly show that it installs without error. Try running with `pip install --upgrade  https://storage.googleapis.com/tensorflow/mac/cpu/tensorflow-1.0.1-py3-none-any.whl --ignore-installed`. The `--ignore-installed` flag tells it to reinstall the package. If that still doesn't work, please open an [issue](https://github.com/silicon-valley-data-science/RNN-Tutorial/issues), or you can try to follow the advice [here](https://www.tensorflow.org/install/install_mac).</sub>
 
 
-### Run unittests
+### Run unit tests
 We have included example unittests for the `tf_train_ctc.py` script
 
 ```bash
@@ -70,14 +70,16 @@ tensorboard --logdir=$RNN_TUTORIAL/models/nn/debug_models/summary/
 
 
 ### Add data
-We have included example data from the [LibriVox corpus](https://librivox.org) in `data/raw/librivox/LibriSpeech/`. The data is separated into folders:
+Some examples data are stored in `data` folder. There are Thai speech samples from [Lotus corpus](https://www.nectec.or.th/corpus/index.php?league=sa). The data is separated into folders:
 
-    - Train: train-clean-100-wav (5 examples)
-    - Test: test-clean-wav (2 examples)
-    - Dev: dev-clean-wav (2 examples)
+    - Train: train (2 examples)
+    - Test: test (2 examples)
+    - Dev: dev (2 examples)
 
 If you would like to train a performant model, you can add additional wave and txt files to these folders, or create a new folder and update `configs/neural_network.ini` with the folder locations  
 
+### Alphabets Mapping
+In config folder, there is a Thai alphabets mapping table in csv format. It will be read by `src/features/utils/text.py`. A space character and a path to alphabets mapping table are hard coded in `text.py`. I will change it later.
 
 ### Remove additions
 
